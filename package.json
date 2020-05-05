@@ -1,0 +1,65 @@
+{
+  "name": "ws-demo",
+  "version": "0.0.1",
+  "description": "my bee&#39;s knees project",
+  "repository": {
+    "url": "gengjiawen/ws-demo",
+    "type": "git"
+  },
+  "author": "gengjiawen <technicalcute@gmail.com>",
+  "scripts": {
+    "start": "nodemon libs/index.ts",
+    "server": "ts-node-dev --respawn libs/index.ts",
+    "clean": "rimraf build",
+    "format": "prettier --write \"{examples,libs,script,test,bin}/**/*.{js,ts}\" \"*.yml\"",
+    "format:check": "prettier --list-different \"{examples,libs,script,test,bin}/**/*.{js,ts}\" \"*.yml\"",
+    "test": "jest",
+    "build": "npm run clean && tsc -p ./tsconfig.json"
+  },
+  "dependencies": {
+    "nodemon": "^2.0.3",
+    "ws": "^7.2.5"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "@types/jest": "25.2.1",
+    "@types/node": "13.13.4",
+    "@types/ws": "^7.2.4",
+    "husky": "^4.0.1",
+    "jest": "25.5.3",
+    "lint-staged": "^10.0.8",
+    "prettier": "2.0.5",
+    "rimraf": "3.0.0",
+    "ts-jest": "25.4.0",
+    "typescript": "3.8.3"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,ts,tsx,md,css,html,yml}": [
+      "prettier --write",
+      "git add"
+    ]
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ],
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testMatch": [
+      "**/?(*.)(spec|test).(ts|tsx|js)",
+      "**/__tests__/*.(ts|tsx|js)",
+      "**/test/*.(ts|tsx|js)"
+    ]
+  }
+}
