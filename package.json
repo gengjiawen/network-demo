@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "my bee&#39;s knees project",
   "repository": {
-    "url": "gengjiawen/ws-demo",
+    "url": "gengjiawen/network-demo",
     "type": "git"
   },
   "author": "gengjiawen <technicalcute@gmail.com>",
@@ -17,8 +17,8 @@
     "build": "npm run clean && tsc -p ./tsconfig.json"
   },
   "dependencies": {
-    "nodemon": "^2.0.3",
-    "ws": "^7.2.5"
+    "nodemon": "2.0.3",
+    "ws": "7.2.5"
   },
   "publishConfig": {
     "access": "public"
