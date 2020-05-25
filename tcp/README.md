@@ -1,6 +1,6 @@
 # A progressive tcp implementation
 
-Only work on linux.
+Works on linux and WSL2.
 
 By vidoe: https://www.youtube.com/watch?v=bzja9fQWzdA
 
