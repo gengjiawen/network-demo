@@ -21,7 +21,7 @@ impl State {
 pub struct Connection {
     state: State,
     send: SendSequenceSpace,
-    recv: ReveSequenceSpace,
+    recv: RecvSequenceSpace,
     ip: etherparse::Ipv4Header,
     tcp: etherparse::TcpHeader,
 }
@@ -111,7 +111,7 @@ impl Connection {
                 wnd: tcph.window_size(),
                 up: false,
             },
-            tcp: etherparse::TcpHeader::new(tcph.destination_port(), tcph.source_port(), iss, win),
+            tcp: etherparse::TcpHeader::new(tcph.destination_port(), tcph.source_port(), iss, wnd),
             ip: etherparse::Ipv4Header::new(
                 0,
                 64,
@@ -137,6 +137,45 @@ impl Connection {
         c.tcp.ack = true;
         c.write(nic, &[])?;
         Ok(Some(c))
+    }
+
+    fn write(&mut self, nic: &mut tun_tap::Iface, payload: &[u8]) -> io::Result<usize> {
+        let mut buf = [0u8; 1500];
+        self.tcp.sequence_number = self.send.nxt;
+        self.tcp.acknowledgment_number = self.recv.nxt;
+
+        let size= std::cmp::min(
+            buf.len(),
+            self.tcp.header_len() as usize + self.ip.header_len() as usize + payload.len(),
+        );
+
+        self.ip.set_payload_len(size - self.ip.header_len() as usize);
+        
+        // kernel does this for us
+        self.tcp.checksum = self.tcp.calc_checksum_ipv4(&self.ip, &[])
+            .expect("fail to calc_checksum_ipv4");
+
+        // write out the headers
+        use std::io::Write;
+        let mut unwritten = &mut buf[..];
+        self.ip.write(&mut unwritten);
+        self.tcp.write(&mut unwritten);
+        let payload_bytes = unwritten.write(payload)?;
+        let unwritten = unwritten.len();
+        self.send.nxt = self.send.nxt.wrapping_add(payload_bytes as u32);
+
+        if self.tcp.syn {
+            self.send.nxt = self.send.nxt.wrapping_add(1);
+            set.tcp.syn = false;
+        }
+
+        if self.tcp.fin {
+            self.send.nxt = self.send.nxt.wrapping_add(1);
+            self.tcp.fin = false;
+        }
+
+        nic.send(&buf[..buf.len() - unwritten]);
+        Ok(payload_bytes)
     }
 
     pub fn on_packet<'a>(
