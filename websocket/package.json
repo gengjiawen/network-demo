@@ -9,7 +9,6 @@
   "author": "gengjiawen <technicalcute@gmail.com>",
   "scripts": {
     "start": "nodemon --exec ts-node libs/ws.ts",
-    "server": "ts-node-dev --respawn libs/ws.ts",
     "clean": "rimraf build",
     "format": "prettier --write \"{examples,libs,script,test,bin}/**/*.{js,ts}\" \"*.yml\"",
     "format:check": "prettier --list-different \"{examples,libs,script,test,bin}/**/*.{js,ts}\" \"*.yml\"",
@@ -17,25 +16,24 @@
     "build": "npm run clean && tsc -p ./tsconfig.json"
   },
   "dependencies": {
-    "nodemon": "2.0.7",
-    "ws": "7.4.4"
+    "nodemon": "2.0.12",
+    "ws": "8.1.0"
   },
   "publishConfig": {
     "access": "public"
   },
   "devDependencies": {
-    "@types/jest": "26.0.20",
-    "@types/node": "14.14.34",
-    "@types/ws": "^7.4.0",
-    "husky": "^5.1.3",
-    "jest": "26.6.3",
-    "lint-staged": "^10.5.4",
-    "prettier": "2.2.1",
+    "@types/jest": "27.0.1",
+    "@types/node": "16.6.1",
+    "@types/ws": "^7.4.7",
+    "husky": "^7.0.1",
+    "jest": "27.0.6",
+    "lint-staged": "^11.1.2",
+    "prettier": "2.3.2",
     "rimraf": "3.0.2",
-    "ts-jest": "26.5.3",
-    "ts-node": "^9.1.1",
-    "ts-node-dev": "^1.1.6",
-    "typescript": "4.2.3"
+    "ts-jest": "27.0.5",
+    "ts-node": "^10.2.0",
+    "typescript": "4.3.5"
   },
   "husky": {
     "hooks": {
